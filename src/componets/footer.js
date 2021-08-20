@@ -5,7 +5,7 @@ const Footer = () => {
     <>
       <div className="bg-dark text-secondary px-2 py-2 text-center">
         <div className="py-2">
-          <h1 className="display-5 fw-bold text-white">Here Is a Book Store</h1>
+          <h1 className="display-5 fw-bold text-white">Here Is a Book Cheat Store</h1>
           <div className="col-lg-7 mx-auto">
             <p className="fs-5 mb-4">
               "You have more than you think you have. You can do more than you

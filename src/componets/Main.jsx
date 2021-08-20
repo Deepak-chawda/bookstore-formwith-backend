@@ -3,6 +3,7 @@ import { useState,useEffect } from "react";
 import "./Mani.css";
 import Card from "./Card";
 import axios from "axios"
+// this is package for popup error 
 import swal from 'sweetalert';
 // import Swal from 'sweetalert2'
 
@@ -112,7 +113,7 @@ const Main = () => {
             />
           </div>
           <div className="contents col-md-5" >
-            <h2 className="signin-text mb-3 text-center"> BOOK STORE FORM</h2>
+            <h2 className="signin-text mb-3 text-center">BOOK CHEAT SHEET </h2>
             <form className="form-container ">
               <div className="form-group">
                 <label for="booName">Book Name</label>
