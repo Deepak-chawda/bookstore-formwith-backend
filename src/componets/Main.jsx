@@ -1,5 +1,5 @@
 import React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./Mani.css";
 import Card from "./Card";
 import axios from "axios"
@@ -8,96 +8,106 @@ import swal from 'sweetalert';
 // import Swal from 'sweetalert2'
 
 const Main = () => {
-  const [setData, setuserData] =useState({
-    bookname : " ",
-    price : " ",
-    author : " ",
-    language : " ",
-    aboutAuthor : " "
+  const [Isloader, setIsloader] = useState(false)
+  const [setData, setuserData] = useState({
+    bookname: " ",
+    price: " ",
+    author: " ",
+    language: " ",
+    aboutAuthor: " "
   })
-  const inputHnadle = (e)=>{
-    setuserData({...setData,[e.target.name]:e.target.value})
+  const inputHnadle = (e) => {
+    setuserData({ ...setData, [e.target.name]: e.target.value })
   }
   // change button name and call different apis edit ,submit
-  const[changeText,setchangeText]=useState("SUBMIT")
-  const [editId,seteditId]=useState()
-  const [userArray,setuserArray]=useState([ ])
+  const [changeText, setchangeText] = useState("SUBMIT")
+  const [editId, seteditId] = useState()
+  const [userArray, setuserArray] = useState([])
   // here i am calling post api......
-  const submitData= async ()=>{
+  const submitData = async () => {
     // console.log("data",setData)  
     try {
-      if(changeText==="SUBMIT"){
-        if(setData.bookname===" "||setData.price===" "||setData.author===" "||setData.language===" "||setData.aboutAuthor===" "){
+      if (changeText === "SUBMIT") {
+        if (setData.bookname === " " || setData.price === " " || setData.author === " " || setData.language === " " || setData.aboutAuthor === " ") {
           swal("Oops", "Plz fill all the fields!", "error");
 
-        }else{
-        const response = await axios.post("https://book-dictonary-api.herokuapp.com/post/storebooks",setData);
-        setuserData({
-          bookname : " ",
-          price : " ",
-          author : " ",
-          language : " ",
-          aboutAuthor : " "
-        })
-      }
-      }else{
+        } else {
+          setIsloader(true)
+          const response = await axios.post("https://book-dictonary-api.herokuapp.com/post/storebooks", setData);
+          setuserData({
+            bookname: " ",
+            price: " ",
+            author: " ",
+            language: " ",
+            aboutAuthor: " "
+          })
+          setIsloader(false)
+        }
+      } else {
         // console.log(editId)
-        if(setData.bookname===" "||setData.price===" "||setData.author===" "||setData.language===" "||setData.aboutAuthor===" "){
+        if (setData.bookname === " " || setData.price === " " || setData.author === " " || setData.language === " " || setData.aboutAuthor === " ") {
           swal("Good job!", "You clicked the button!", "success");
-        }else{
-        const response = await axios.put(`https://book-dictonary-api.herokuapp.com/update/book?_id=${editId}` , setData)
-        setuserData({
-          bookname : " ",
-          price : " ",
-          author : " ",
-          language : " ",
-          aboutAuthor : " "
-        })
-        setchangeText("SUBMIT")
+        } else {
+          Isloader(true)
+          const response = await axios.put(`https://book-dictonary-api.herokuapp.com/update/book?_id=${editId}`, setData)
+          setuserData({
+            bookname: " ",
+            price: " ",
+            author: " ",
+            language: " ",
+            aboutAuthor: " "
+          })
+          setchangeText("SUBMIT")
+          setIsloader(false)
+        }
       }
-      }
-    //  console.log("response",response)
-     fetchData()
+      //  console.log("response",response)
+      fetchData()
     } catch (error) {
-      console.log("errors",error.response)
+      console.log("errors", error.response)
     }
   }
   // this hook use for first time componet mount call and fetch data from db
-  useEffect(()=>{
+  useEffect(() => {
     fetchData()
-  },[])
+  }, [])
   // get the all data using useffect() hook
   // here i am calling get api
-  const fetchData = async ()=>{
+  const fetchData = async () => {
     // console.log("data",setData)
     try {
-     const response = await axios.get("https://book-dictonary-api.herokuapp.com/get/books/allData")
-    //  console.log("response",response)
-     setuserArray(response.data)
+      setIsloader(true)
+      const response = await axios.get("https://book-dictonary-api.herokuapp.com/get/books/allData")
+      //  console.log("response",response)
+      setIsloader(false)
+      setuserArray(response.data)
     } catch (error) {
-      console.log("errors",error.response)   
+      console.log("errors", error.response)
     }
   }
 
   // const putData = async ()=>{
   //   try {
-      
+
   //     fetchData()
   //   } catch (error) {
   //     console.log("errors",error.response)  
   //   }
   // }
   // here i am delete item from Database using id with query.....
-  const deleteData = async (_id)=>{
+  const deleteData = async (_id) => {
     // console.log(_id)
     // console.log("called")
     try {
+      setIsloader(true)
       const response = await axios.delete(`https://book-dictonary-api.herokuapp.com/delete/book?_id=${_id}`)
+      setIsloader(false)
       fetchData()
-      
+
+
     } catch (error) {
-      console.log("error",error.response)
-      
+      console.log("error", error.response)
+
     }
   }
   return (
@@ -126,7 +136,7 @@ const Main = () => {
                   placeholder="Enter your book name"
                   value={setData.bookname}
                   onChange={inputHnadle}
-                   required
+                  required
                 />
               </div>
               <div className="form-group">
@@ -137,7 +147,7 @@ const Main = () => {
                   type="number"
                   name="price"
                   className="form-control p-2"
-                  placeholder="Enter  book price" 
+                  placeholder="Enter  book price"
                   value={setData.price}
                   onChange={inputHnadle}
                   required
@@ -154,7 +164,7 @@ const Main = () => {
                   placeholder="Enter book author name"
                   value={setData.author}
                   onChange={inputHnadle}
-                   required
+                  required
                 />
               </div>
               <div className="form-group">
@@ -168,7 +178,7 @@ const Main = () => {
                   placeholder="Enter book language name"
                   value={setData.language}
                   onChange={inputHnadle}
-                   required
+                  required
                 />
               </div>
               <div className="form-group">
@@ -179,7 +189,7 @@ const Main = () => {
                   type="text"
                   name="aboutAuthor"
                   className="form-control p-2"
-                  placeholder="Enter book language name" 
+                  placeholder="Enter book language name"
                   value={setData.aboutAuthor}
                   onChange={inputHnadle}
                   required
@@ -189,9 +199,14 @@ const Main = () => {
                 <button
                   type="button"
                   class=" btn btn-outline-primary  "
-                  onClick={submitData} style={{"fontWeight":"bold"}}
+                  onClick={submitData} style={{ "fontWeight": "bold" }}
+                  disabled={Isloader}
                 >
                   {changeText}
+
+                  {Isloader && <div class="spinner-border spinner-border-sm m-1 text-dark" role="status"> 
+
+                  </div>}
                 </button>
               </div>
             </form>
@@ -200,20 +215,20 @@ const Main = () => {
       </div>
       {/* create dynamic card for book store */}
       <div className="container d-flex flex-wrap">
-      {userArray.map((element)=>{
-        return (
-          <>
-        <Card element={element}  
-        key={element._id}
-        deleteData={deleteData}
-        // putData={putData}
-        setuserData={setuserData}
-        setData={setData}
-        setchangeText={setchangeText}
-        seteditId={seteditId}/>
-        </>
-        )
-      })}
+        {userArray.map((element) => {
+          return (
+            <>
+              <Card element={element}
+                key={element._id}
+                deleteData={deleteData}
+                // putData={putData}
+                setuserData={setuserData}
+                setData={setData}
+                setchangeText={setchangeText}
+                seteditId={seteditId} />
+            </>
+          )
+        })}
       </div>
     </>
   );
