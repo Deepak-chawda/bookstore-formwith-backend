@@ -3,12 +3,14 @@ import { useState, useEffect } from "react";
 import "./Mani.css";
 import Card from "./Card";
 import axios from "axios"
+import { toast } from "react-toastify";
 // this is package for popup error 
 import swal from 'sweetalert';
 // import Swal from 'sweetalert2'
 
 const Main = () => {
   const [Isloader, setIsloader] = useState(false)
+  const [Delloader, setDelloader]= useState(false)
   const [setData, setuserData] = useState({
     bookname: " ",
     price: " ",
@@ -34,6 +36,7 @@ const Main = () => {
         } else {
           setIsloader(true)
           const response = await axios.post("https://book-dictonary-api.herokuapp.com/post/storebooks", setData);
+         
           setuserData({
             bookname: " ",
             price: " ",
@@ -46,10 +49,11 @@ const Main = () => {
       } else {
         // console.log(editId)
         if (setData.bookname === " " || setData.price === " " || setData.author === " " || setData.language === " " || setData.aboutAuthor === " ") {
-          swal("Good job!", "You clicked the button!", "success");
+          swal("Oops", "Plz fill all the fields!", "error");
         } else {
-          Isloader(true)
+          setIsloader(true)
           const response = await axios.put(`https://book-dictonary-api.herokuapp.com/update/book?_id=${editId}`, setData)
+          console.log("dd",response)
           setuserData({
             bookname: " ",
             price: " ",
@@ -59,8 +63,12 @@ const Main = () => {
           })
           setchangeText("SUBMIT")
           setIsloader(false)
+         
         }
       }
+      toast.success("Updated  successfully 👍 ", {
+        theme: "colored",
+      });
       //  console.log("response",response)
       fetchData()
     } catch (error) {
@@ -99,9 +107,13 @@ const Main = () => {
     // console.log(_id)
     // console.log("called")
     try {
-      setIsloader(true)
+      setDelloader(true)
       const response = await axios.delete(`https://book-dictonary-api.herokuapp.com/delete/book?_id=${_id}`)
-      setIsloader(false)
+      setDelloader(false)
+      toast.success("Deleted successfully 👍", {
+        theme: "colored"
+       
+      });
       fetchData()
 
 
@@ -221,6 +233,8 @@ const Main = () => {
               <Card element={element}
                 key={element._id}
                 deleteData={deleteData}
+                setDelloader={setDelloader}
+                Delloader={Delloader}
                 // putData={putData}
                 setuserData={setuserData}
                 setData={setData}
