@@ -65,10 +65,11 @@ const Main = () => {
           setIsloader(false)
          
         }
-      }
-      toast.success("Updated  successfully 👍 ", {
+        toast.success("Updated  successfully 👍 ", {
         theme: "colored",
       });
+      }
+      
       //  console.log("response",response)
       fetchData()
     } catch (error) {
